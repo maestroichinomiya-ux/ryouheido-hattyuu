@@ -66,7 +66,6 @@
     margin: 16px auto;
   }
 
-  /* Tab navigation */
   .tabs {
     display: flex;
     gap: 8px;
@@ -89,18 +88,9 @@
     letter-spacing: 0.05em;
   }
 
-  .tab-btn:hover {
-    border-color: var(--accent);
-    color: var(--accent);
-  }
+  .tab-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .tab-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
 
-  .tab-btn.active {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: #fff;
-  }
-
-  /* Department section */
   .dept-section {
     display: none;
     max-width: 860px;
@@ -129,15 +119,7 @@
     color: var(--accent);
   }
 
-  .dept-desc {
-    font-size: 13px;
-    color: var(--ink-soft);
-  }
-
-  /* Category sections */
-  .category {
-    margin-bottom: 32px;
-  }
+  .category { margin-bottom: 32px; }
 
   .category-label {
     display: inline-flex;
@@ -146,30 +128,16 @@
     font-size: 12px;
     font-weight: 700;
     letter-spacing: 0.12em;
-    text-transform: uppercase;
     padding: 4px 14px;
     border-radius: 4px;
     margin-bottom: 16px;
   }
 
-  .category-label.line {
-    background: #e6f5eb;
-    color: var(--line-color);
-  }
-
-  .category-label.fax {
-    background: #e5eff7;
-    color: var(--fax-color);
-  }
-
-  .category-label.login {
-    background: #ede8f5;
-    color: var(--login-color);
-  }
-
+  .category-label.line { background: #e6f5eb; color: var(--line-color); }
+  .category-label.fax { background: #e5eff7; color: var(--fax-color); }
+  .category-label.login { background: #ede8f5; color: var(--login-color); }
   .category-label .icon { font-size: 15px; }
 
-  /* Vendor cards */
   .cards {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -194,10 +162,7 @@
     color: var(--ink);
   }
 
-  .card .field {
-    margin-bottom: 10px;
-  }
-
+  .card .field { margin-bottom: 10px; }
   .card .field:last-child { margin-bottom: 0; }
 
   .card .field-label {
@@ -222,7 +187,6 @@
 
   .card .field-value a:hover { text-decoration: underline; }
 
-  /* Method badge on card */
   .method-badge {
     display: inline-block;
     font-size: 11px;
@@ -233,32 +197,13 @@
     letter-spacing: 0.05em;
   }
 
-  .method-badge.line {
-    background: #e6f5eb;
-    color: var(--line-color);
-  }
+  .method-badge.line { background: #e6f5eb; color: var(--line-color); }
+  .method-badge.fax { background: #e5eff7; color: var(--fax-color); }
+  .method-badge.login { background: #ede8f5; color: var(--login-color); }
 
-  .method-badge.fax {
-    background: #e5eff7;
-    color: var(--fax-color);
-  }
+  .pw-wrap { display: flex; align-items: center; gap: 8px; }
 
-  .method-badge.login {
-    background: #ede8f5;
-    color: var(--login-color);
-  }
-
-  /* Password reveal */
-  .pw-wrap {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .pw-dots {
-    letter-spacing: 3px;
-    font-size: 14px;
-  }
+  .pw-dots { letter-spacing: 3px; font-size: 14px; }
 
   .pw-toggle {
     background: none;
@@ -272,7 +217,8 @@
 
   .pw-toggle:hover { color: var(--accent); }
 
-  /* Print note */
+  .dept-block { margin-bottom: 48px; }
+
   .print-note {
     text-align: center;
     margin-top: 56px;
@@ -284,15 +230,16 @@
 
   @media print {
     .tabs { display: none; }
-    .dept-section { display: block !important; page-break-after: always; }
+    .dept-section { display: block !important; }
+    .dept-block { page-break-after: always; }
     .pw-toggle { display: none; }
-    .pw-dots::after { content: attr(data-pw); display: inline; }
     body { padding: 24px; background: white; }
   }
 
   @media (max-width: 600px) {
     header h1 { font-size: 24px; }
     .cards { grid-template-columns: 1fr; }
+    .tab-btn { padding: 8px 18px; font-size: 13px; }
   }
 </style>
 </head>
@@ -306,10 +253,11 @@
 </header>
 
 <div class="tabs">
-  <button class="tab-btn active" onclick="showDept('all')">全部署</button>
-  <button class="tab-btn" onclick="showDept('shipping')">出荷利用</button>
-  <button class="tab-btn" onclick="showDept('cafe')">カフェ利用</button>
-  <button class="tab-btn" onclick="showDept('production')">製造利用</button>
+  <button class="tab-btn active" onclick="showDept('all', this)">全部署</button>
+  <button class="tab-btn" onclick="showDept('shipping', this)">出荷利用</button>
+  <button class="tab-btn" onclick="showDept('cafe', this)">カフェ利用</button>
+  <button class="tab-btn" onclick="showDept('production', this)">製造利用</button>
+  <button class="tab-btn" onclick="showDept('office', this)">事務所利用</button>
 </div>
 
 <!-- 全部署 -->
@@ -317,37 +265,17 @@
   <div style="max-width:860px;margin:0 auto;">
 
     <!-- 出荷利用 -->
-    <div style="margin-bottom:48px;">
-      <div class="dept-header">
-        <div class="dept-badge">出荷利用</div>
-      </div>
-
+    <div class="dept-block">
+      <div class="dept-header"><div class="dept-badge">出荷利用</div></div>
       <div class="category">
         <div class="category-label line"><span class="icon">💬</span>LINE</div>
         <div class="cards">
-          <div class="card">
-            <div class="method-badge line">LINE</div>
-            <div class="vendor-name">フルハシ</div>
-            <div class="field"><div class="field-label">手段</div><div class="field-value">LINEにて直接発注</div></div>
-          </div>
-          <div class="card">
-            <div class="method-badge line">LINE</div>
-            <div class="vendor-name">ヤマニ</div>
-            <div class="field"><div class="field-label">手段</div><div class="field-value">LINEにて直接発注</div></div>
-          </div>
-          <div class="card">
-            <div class="method-badge line">LINE</div>
-            <div class="vendor-name">恵那段ボール</div>
-            <div class="field"><div class="field-label">手段</div><div class="field-value">LINEにて直接発注</div></div>
-          </div>
-          <div class="card">
-            <div class="method-badge line">LINE</div>
-            <div class="vendor-name">イサジ</div>
-            <div class="field"><div class="field-label">手段</div><div class="field-value">LINEにて直接発注</div></div>
-          </div>
+          <div class="card"><div class="method-badge line">LINE</div><div class="vendor-name">フルハシ</div><div class="field"><div class="field-label">手段</div><div class="field-value">LINEにて直接発注</div></div></div>
+          <div class="card"><div class="method-badge line">LINE</div><div class="vendor-name">ヤマニ</div><div class="field"><div class="field-label">手段</div><div class="field-value">LINEにて直接発注</div></div></div>
+          <div class="card"><div class="method-badge line">LINE</div><div class="vendor-name">恵那段ボール</div><div class="field"><div class="field-label">手段</div><div class="field-value">LINEにて直接発注</div></div></div>
+          <div class="card"><div class="method-badge line">LINE</div><div class="vendor-name">イサジ</div><div class="field"><div class="field-label">手段</div><div class="field-value">LINEにて直接発注</div></div></div>
         </div>
       </div>
-
       <div class="category">
         <div class="category-label login"><span class="icon">🔐</span>ログイン発注</div>
         <div class="cards">
@@ -356,72 +284,36 @@
             <div class="vendor-name">アスクル</div>
             <div class="field"><div class="field-label">サイトURL</div><div class="field-value"><a href="https://solution.soloel.com/" target="_blank">https://solution.soloel.com/</a></div></div>
             <div class="field"><div class="field-label">ログインID</div><div class="field-value">73165339</div></div>
-            <div class="field">
-              <div class="field-label">パスワード</div>
-              <div class="field-value">
-                <div class="pw-wrap">
-                  <span class="pw-dots" data-pw="ryouheido1">••••••••••</span>
-                  <button class="pw-toggle" onclick="togglePw(this)">表示</button>
-                </div>
-              </div>
-            </div>
+            <div class="field"><div class="field-label">パスワード</div><div class="field-value"><div class="pw-wrap"><span class="pw-dots" data-pw="ryouheido1">••••••••••</span><button class="pw-toggle" onclick="togglePw(this)">表示</button></div></div></div>
           </div>
           <div class="card">
             <div class="method-badge login">ログイン</div>
             <div class="vendor-name">ヘッズ</div>
             <div class="field"><div class="field-label">サイトURL</div><div class="field-value"><a href="https://www.e-heads.co.jp/shop/customer/menu.aspx" target="_blank">e-heads.co.jp</a></div></div>
             <div class="field"><div class="field-label">ログインID</div><div class="field-value">info@ryouheid.enat.jp</div></div>
-            <div class="field">
-              <div class="field-label">パスワード</div>
-              <div class="field-value">
-                <div class="pw-wrap">
-                  <span class="pw-dots" data-pw="enakuri1">••••••••</span>
-                  <button class="pw-toggle" onclick="togglePw(this)">表示</button>
-                </div>
-              </div>
-            </div>
+            <div class="field"><div class="field-label">パスワード</div><div class="field-value"><div class="pw-wrap"><span class="pw-dots" data-pw="enakuri1">••••••••</span><button class="pw-toggle" onclick="togglePw(this)">表示</button></div></div></div>
           </div>
           <div class="card">
             <div class="method-badge login">ログイン</div>
             <div class="vendor-name">シモジマ</div>
             <div class="field"><div class="field-label">サイトURL</div><div class="field-value"><a href="https://www.e-heads.co.jp/shop/customer/menu.aspx" target="_blank">e-heads.co.jp</a></div></div>
             <div class="field"><div class="field-label">ログインID</div><div class="field-value">00003050abc</div></div>
-            <div class="field">
-              <div class="field-label">パスワード</div>
-              <div class="field-value">
-                <div class="pw-wrap">
-                  <span class="pw-dots" data-pw="enakuri1">••••••••</span>
-                  <button class="pw-toggle" onclick="togglePw(this)">表示</button>
-                </div>
-              </div>
-            </div>
+            <div class="field"><div class="field-label">パスワード</div><div class="field-value"><div class="pw-wrap"><span class="pw-dots" data-pw="enakuri1">••••••••</span><button class="pw-toggle" onclick="togglePw(this)">表示</button></div></div></div>
           </div>
         </div>
       </div>
     </div>
 
     <!-- カフェ利用 -->
-    <div style="margin-bottom:48px;">
-      <div class="dept-header">
-        <div class="dept-badge">カフェ利用</div>
-      </div>
-
+    <div class="dept-block">
+      <div class="dept-header"><div class="dept-badge">カフェ利用</div></div>
       <div class="category">
         <div class="category-label fax"><span class="icon">📠</span>ファックス</div>
         <div class="cards">
-          <div class="card">
-            <div class="method-badge fax">ファックス</div>
-            <div class="vendor-name">めいらく</div>
-            <div class="field"><div class="field-label">手段</div><div class="field-value">ファックスにて発注</div></div>
-          </div>
-          <div class="card">
-            <div class="method-badge fax">ファックス</div>
-            <div class="vendor-name">フーズワールド</div>
-            <div class="field"><div class="field-label">手段</div><div class="field-value">ファックスにて発注</div></div>
-          </div>
+          <div class="card"><div class="method-badge fax">ファックス</div><div class="vendor-name">めいらく</div><div class="field"><div class="field-label">手段</div><div class="field-value">ファックスにて発注</div></div></div>
+          <div class="card"><div class="method-badge fax">ファックス</div><div class="vendor-name">フーズワールド</div><div class="field"><div class="field-label">手段</div><div class="field-value">ファックスにて発注</div></div></div>
         </div>
       </div>
-
       <div class="category">
         <div class="category-label login"><span class="icon">🔐</span>ログイン発注</div>
         <div class="cards">
@@ -430,58 +322,29 @@
             <div class="vendor-name">シモジマ</div>
             <div class="field"><div class="field-label">サイトURL</div><div class="field-value"><a href="https://www.e-heads.co.jp/shop/customer/menu.aspx" target="_blank">e-heads.co.jp</a></div></div>
             <div class="field"><div class="field-label">ログインID</div><div class="field-value">info@ryouheid.enat.jp</div></div>
-            <div class="field">
-              <div class="field-label">パスワード</div>
-              <div class="field-value">
-                <div class="pw-wrap">
-                  <span class="pw-dots" data-pw="enakuri1">••••••••</span>
-                  <button class="pw-toggle" onclick="togglePw(this)">表示</button>
-                </div>
-              </div>
-            </div>
+            <div class="field"><div class="field-label">パスワード</div><div class="field-value"><div class="pw-wrap"><span class="pw-dots" data-pw="enakuri1">••••••••</span><button class="pw-toggle" onclick="togglePw(this)">表示</button></div></div></div>
           </div>
         </div>
       </div>
     </div>
 
     <!-- 製造利用 -->
-    <div style="margin-bottom:48px;">
-      <div class="dept-header">
-        <div class="dept-badge">製造利用</div>
-      </div>
-
+    <div class="dept-block">
+      <div class="dept-header"><div class="dept-badge">製造利用</div></div>
       <div class="category">
         <div class="category-label line"><span class="icon">💬</span>LINE</div>
         <div class="cards">
-          <div class="card">
-            <div class="method-badge line">LINE</div>
-            <div class="vendor-name">フルハシ</div>
-            <div class="field"><div class="field-label">手段</div><div class="field-value">LINEにて直接発注</div></div>
-          </div>
-          <div class="card">
-            <div class="method-badge line">LINE</div>
-            <div class="vendor-name">亀屋商事</div>
-            <div class="field"><div class="field-label">手段</div><div class="field-value">LINEにて直接発注</div></div>
-          </div>
-          <div class="card">
-            <div class="method-badge line">LINE</div>
-            <div class="vendor-name">戸田屋</div>
-            <div class="field"><div class="field-label">手段</div><div class="field-value">LINEにて直接発注</div></div>
-          </div>
+          <div class="card"><div class="method-badge line">LINE</div><div class="vendor-name">フルハシ</div><div class="field"><div class="field-label">手段</div><div class="field-value">LINEにて直接発注</div></div></div>
+          <div class="card"><div class="method-badge line">LINE</div><div class="vendor-name">亀屋商事</div><div class="field"><div class="field-label">手段</div><div class="field-value">LINEにて直接発注</div></div></div>
+          <div class="card"><div class="method-badge line">LINE</div><div class="vendor-name">戸田屋</div><div class="field"><div class="field-label">手段</div><div class="field-value">LINEにて直接発注</div></div></div>
         </div>
       </div>
-
       <div class="category">
         <div class="category-label fax"><span class="icon">📠</span>ファックス</div>
         <div class="cards">
-          <div class="card">
-            <div class="method-badge fax">ファックス</div>
-            <div class="vendor-name">めいらく</div>
-            <div class="field"><div class="field-label">手段</div><div class="field-value">ファックスにて発注</div></div>
-          </div>
+          <div class="card"><div class="method-badge fax">ファックス</div><div class="vendor-name">めいらく</div><div class="field"><div class="field-label">手段</div><div class="field-value">ファックスにて発注</div></div></div>
         </div>
       </div>
-
       <div class="category">
         <div class="category-label login"><span class="icon">🔐</span>ログイン発注</div>
         <div class="cards">
@@ -490,30 +353,41 @@
             <div class="vendor-name">モノタロウ</div>
             <div class="field"><div class="field-label">サイトURL</div><div class="field-value"><a href="https://www.monotaro.com/login/" target="_blank">https://www.monotaro.com/login/</a></div></div>
             <div class="field"><div class="field-label">ログインID</div><div class="field-value">e3248935</div></div>
-            <div class="field">
-              <div class="field-label">パスワード</div>
-              <div class="field-value">
-                <div class="pw-wrap">
-                  <span class="pw-dots" data-pw="enakuri1">••••••••</span>
-                  <button class="pw-toggle" onclick="togglePw(this)">表示</button>
-                </div>
-              </div>
-            </div>
+            <div class="field"><div class="field-label">パスワード</div><div class="field-value"><div class="pw-wrap"><span class="pw-dots" data-pw="enakuri1">••••••••</span><button class="pw-toggle" onclick="togglePw(this)">表示</button></div></div></div>
           </div>
           <div class="card">
             <div class="method-badge login">ログイン</div>
             <div class="vendor-name">アスクル</div>
             <div class="field"><div class="field-label">サイトURL</div><div class="field-value"><a href="https://solution.soloel.com/" target="_blank">https://solution.soloel.com/</a></div></div>
             <div class="field"><div class="field-label">ログインID</div><div class="field-value">73165339</div></div>
-            <div class="field">
-              <div class="field-label">パスワード</div>
-              <div class="field-value">
-                <div class="pw-wrap">
-                  <span class="pw-dots" data-pw="ryouheido1">••••••••••</span>
-                  <button class="pw-toggle" onclick="togglePw(this)">表示</button>
-                </div>
-              </div>
-            </div>
+            <div class="field"><div class="field-label">パスワード</div><div class="field-value"><div class="pw-wrap"><span class="pw-dots" data-pw="ryouheido1">••••••••••</span><button class="pw-toggle" onclick="togglePw(this)">表示</button></div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 事務所利用 -->
+    <div class="dept-block">
+      <div class="dept-header"><div class="dept-badge">事務所利用</div></div>
+      <div class="category">
+        <div class="category-label line"><span class="icon">💬</span>LINE</div>
+        <div class="cards">
+          <div class="card"><div class="method-badge line">LINE</div><div class="vendor-name">ヒカリ紙工</div><div class="field"><div class="field-label">手段</div><div class="field-value">LINEにて直接発注</div></div></div>
+          <div class="card"><div class="method-badge line">LINE</div><div class="vendor-name">ヤマニ（オーダー商品）</div><div class="field"><div class="field-label">手段</div><div class="field-value">LINEにて直接発注</div></div></div>
+          <div class="card"><div class="method-badge line">LINE</div><div class="vendor-name">フルハシ（オーダー商品）</div><div class="field"><div class="field-label">手段</div><div class="field-value">LINEにて直接発注</div></div></div>
+          <div class="card"><div class="method-badge line">LINE</div><div class="vendor-name">福田商事</div><div class="field"><div class="field-label">手段</div><div class="field-value">LINEにて直接発注</div></div></div>
+          <div class="card"><div class="method-badge line">LINE</div><div class="vendor-name">大津屋</div><div class="field"><div class="field-label">手段</div><div class="field-value">LINEにて直接発注</div></div></div>
+        </div>
+      </div>
+      <div class="category">
+        <div class="category-label login"><span class="icon">🔐</span>ログイン発注</div>
+        <div class="cards">
+          <div class="card">
+            <div class="method-badge login">ログイン</div>
+            <div class="vendor-name">イロドリ（紙印刷）</div>
+            <div class="field"><div class="field-label">サイトURL</div><div class="field-value"><a href="https://www.iro-dori.net/?is_previous=0" target="_blank">https://www.iro-dori.net/</a></div></div>
+            <div class="field"><div class="field-label">ログインID</div><div class="field-value">info@ryouheid.enat.jp</div></div>
+            <div class="field"><div class="field-label">パスワード</div><div class="field-value"><div class="pw-wrap"><span class="pw-dots" data-pw="enakuri">•••••••</span><button class="pw-toggle" onclick="togglePw(this)">表示</button></div></div></div>
           </div>
         </div>
       </div>
@@ -522,38 +396,18 @@
   </div>
 </div>
 
-<!-- 出荷利用のみ -->
+<!-- 出荷利用 -->
 <div id="shipping" class="dept-section">
-  <div class="dept-header">
-    <div class="dept-badge">出荷利用</div>
-  </div>
-
+  <div class="dept-header"><div class="dept-badge">出荷利用</div></div>
   <div class="category">
     <div class="category-label line"><span class="icon">💬</span>LINE</div>
     <div class="cards">
-      <div class="card">
-        <div class="method-badge line">LINE</div>
-        <div class="vendor-name">フルハシ</div>
-        <div class="field"><div class="field-label">手段</div><div class="field-value">LINEにて直接発注</div></div>
-      </div>
-      <div class="card">
-        <div class="method-badge line">LINE</div>
-        <div class="vendor-name">ヤマニ</div>
-        <div class="field"><div class="field-label">手段</div><div class="field-value">LINEにて直接発注</div></div>
-      </div>
-      <div class="card">
-        <div class="method-badge line">LINE</div>
-        <div class="vendor-name">恵那段ボール</div>
-        <div class="field"><div class="field-label">手段</div><div class="field-value">LINEにて直接発注</div></div>
-      </div>
-      <div class="card">
-        <div class="method-badge line">LINE</div>
-        <div class="vendor-name">イサジ</div>
-        <div class="field"><div class="field-label">手段</div><div class="field-value">LINEにて直接発注</div></div>
-      </div>
+      <div class="card"><div class="method-badge line">LINE</div><div class="vendor-name">フルハシ</div><div class="field"><div class="field-label">手段</div><div class="field-value">LINEにて直接発注</div></div></div>
+      <div class="card"><div class="method-badge line">LINE</div><div class="vendor-name">ヤマニ</div><div class="field"><div class="field-label">手段</div><div class="field-value">LINEにて直接発注</div></div></div>
+      <div class="card"><div class="method-badge line">LINE</div><div class="vendor-name">恵那段ボール</div><div class="field"><div class="field-label">手段</div><div class="field-value">LINEにて直接発注</div></div></div>
+      <div class="card"><div class="method-badge line">LINE</div><div class="vendor-name">イサジ</div><div class="field"><div class="field-label">手段</div><div class="field-value">LINEにて直接発注</div></div></div>
     </div>
   </div>
-
   <div class="category">
     <div class="category-label login"><span class="icon">🔐</span>ログイン発注</div>
     <div class="cards">
@@ -562,72 +416,36 @@
         <div class="vendor-name">アスクル</div>
         <div class="field"><div class="field-label">サイトURL</div><div class="field-value"><a href="https://solution.soloel.com/" target="_blank">https://solution.soloel.com/</a></div></div>
         <div class="field"><div class="field-label">ログインID</div><div class="field-value">73165339</div></div>
-        <div class="field">
-          <div class="field-label">パスワード</div>
-          <div class="field-value">
-            <div class="pw-wrap">
-              <span class="pw-dots" data-pw="ryouheido1">••••••••••</span>
-              <button class="pw-toggle" onclick="togglePw(this)">表示</button>
-            </div>
-          </div>
-        </div>
+        <div class="field"><div class="field-label">パスワード</div><div class="field-value"><div class="pw-wrap"><span class="pw-dots" data-pw="ryouheido1">••••••••••</span><button class="pw-toggle" onclick="togglePw(this)">表示</button></div></div></div>
       </div>
       <div class="card">
         <div class="method-badge login">ログイン</div>
         <div class="vendor-name">ヘッズ</div>
         <div class="field"><div class="field-label">サイトURL</div><div class="field-value"><a href="https://www.e-heads.co.jp/shop/customer/menu.aspx" target="_blank">e-heads.co.jp</a></div></div>
         <div class="field"><div class="field-label">ログインID</div><div class="field-value">info@ryouheid.enat.jp</div></div>
-        <div class="field">
-          <div class="field-label">パスワード</div>
-          <div class="field-value">
-            <div class="pw-wrap">
-              <span class="pw-dots" data-pw="enakuri1">••••••••</span>
-              <button class="pw-toggle" onclick="togglePw(this)">表示</button>
-            </div>
-          </div>
-        </div>
+        <div class="field"><div class="field-label">パスワード</div><div class="field-value"><div class="pw-wrap"><span class="pw-dots" data-pw="enakuri1">••••••••</span><button class="pw-toggle" onclick="togglePw(this)">表示</button></div></div></div>
       </div>
       <div class="card">
         <div class="method-badge login">ログイン</div>
         <div class="vendor-name">シモジマ</div>
         <div class="field"><div class="field-label">サイトURL</div><div class="field-value"><a href="https://www.e-heads.co.jp/shop/customer/menu.aspx" target="_blank">e-heads.co.jp</a></div></div>
         <div class="field"><div class="field-label">ログインID</div><div class="field-value">00003050abc</div></div>
-        <div class="field">
-          <div class="field-label">パスワード</div>
-          <div class="field-value">
-            <div class="pw-wrap">
-              <span class="pw-dots" data-pw="enakuri1">••••••••</span>
-              <button class="pw-toggle" onclick="togglePw(this)">表示</button>
-            </div>
-          </div>
-        </div>
+        <div class="field"><div class="field-label">パスワード</div><div class="field-value"><div class="pw-wrap"><span class="pw-dots" data-pw="enakuri1">••••••••</span><button class="pw-toggle" onclick="togglePw(this)">表示</button></div></div></div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- カフェ利用のみ -->
+<!-- カフェ利用 -->
 <div id="cafe" class="dept-section">
-  <div class="dept-header">
-    <div class="dept-badge">カフェ利用</div>
-  </div>
-
+  <div class="dept-header"><div class="dept-badge">カフェ利用</div></div>
   <div class="category">
     <div class="category-label fax"><span class="icon">📠</span>ファックス</div>
     <div class="cards">
-      <div class="card">
-        <div class="method-badge fax">ファックス</div>
-        <div class="vendor-name">めいらく</div>
-        <div class="field"><div class="field-label">手段</div><div class="field-value">ファックスにて発注</div></div>
-      </div>
-      <div class="card">
-        <div class="method-badge fax">ファックス</div>
-        <div class="vendor-name">フーズワールド</div>
-        <div class="field"><div class="field-label">手段</div><div class="field-value">ファックスにて発注</div></div>
-      </div>
+      <div class="card"><div class="method-badge fax">ファックス</div><div class="vendor-name">めいらく</div><div class="field"><div class="field-label">手段</div><div class="field-value">ファックスにて発注</div></div></div>
+      <div class="card"><div class="method-badge fax">ファックス</div><div class="vendor-name">フーズワールド</div><div class="field"><div class="field-label">手段</div><div class="field-value">ファックスにて発注</div></div></div>
     </div>
   </div>
-
   <div class="category">
     <div class="category-label login"><span class="icon">🔐</span>ログイン発注</div>
     <div class="cards">
@@ -636,58 +454,29 @@
         <div class="vendor-name">シモジマ</div>
         <div class="field"><div class="field-label">サイトURL</div><div class="field-value"><a href="https://www.e-heads.co.jp/shop/customer/menu.aspx" target="_blank">e-heads.co.jp</a></div></div>
         <div class="field"><div class="field-label">ログインID</div><div class="field-value">info@ryouheid.enat.jp</div></div>
-        <div class="field">
-          <div class="field-label">パスワード</div>
-          <div class="field-value">
-            <div class="pw-wrap">
-              <span class="pw-dots" data-pw="enakuri1">••••••••</span>
-              <button class="pw-toggle" onclick="togglePw(this)">表示</button>
-            </div>
-          </div>
-        </div>
+        <div class="field"><div class="field-label">パスワード</div><div class="field-value"><div class="pw-wrap"><span class="pw-dots" data-pw="enakuri1">••••••••</span><button class="pw-toggle" onclick="togglePw(this)">表示</button></div></div></div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- 製造利用のみ -->
+<!-- 製造利用 -->
 <div id="production" class="dept-section">
-  <div class="dept-header">
-    <div class="dept-badge">製造利用</div>
-  </div>
-
+  <div class="dept-header"><div class="dept-badge">製造利用</div></div>
   <div class="category">
     <div class="category-label line"><span class="icon">💬</span>LINE</div>
     <div class="cards">
-      <div class="card">
-        <div class="method-badge line">LINE</div>
-        <div class="vendor-name">フルハシ</div>
-        <div class="field"><div class="field-label">手段</div><div class="field-value">LINEにて直接発注</div></div>
-      </div>
-      <div class="card">
-        <div class="method-badge line">LINE</div>
-        <div class="vendor-name">亀屋商事</div>
-        <div class="field"><div class="field-label">手段</div><div class="field-value">LINEにて直接発注</div></div>
-      </div>
-      <div class="card">
-        <div class="method-badge line">LINE</div>
-        <div class="vendor-name">戸田屋</div>
-        <div class="field"><div class="field-label">手段</div><div class="field-value">LINEにて直接発注</div></div>
-      </div>
+      <div class="card"><div class="method-badge line">LINE</div><div class="vendor-name">フルハシ</div><div class="field"><div class="field-label">手段</div><div class="field-value">LINEにて直接発注</div></div></div>
+      <div class="card"><div class="method-badge line">LINE</div><div class="vendor-name">亀屋商事</div><div class="field"><div class="field-label">手段</div><div class="field-value">LINEにて直接発注</div></div></div>
+      <div class="card"><div class="method-badge line">LINE</div><div class="vendor-name">戸田屋</div><div class="field"><div class="field-label">手段</div><div class="field-value">LINEにて直接発注</div></div></div>
     </div>
   </div>
-
   <div class="category">
     <div class="category-label fax"><span class="icon">📠</span>ファックス</div>
     <div class="cards">
-      <div class="card">
-        <div class="method-badge fax">ファックス</div>
-        <div class="vendor-name">めいらく</div>
-        <div class="field"><div class="field-label">手段</div><div class="field-value">ファックスにて発注</div></div>
-      </div>
+      <div class="card"><div class="method-badge fax">ファックス</div><div class="vendor-name">めいらく</div><div class="field"><div class="field-label">手段</div><div class="field-value">ファックスにて発注</div></div></div>
     </div>
   </div>
-
   <div class="category">
     <div class="category-label login"><span class="icon">🔐</span>ログイン発注</div>
     <div class="cards">
@@ -696,30 +485,41 @@
         <div class="vendor-name">モノタロウ</div>
         <div class="field"><div class="field-label">サイトURL</div><div class="field-value"><a href="https://www.monotaro.com/login/" target="_blank">https://www.monotaro.com/login/</a></div></div>
         <div class="field"><div class="field-label">ログインID</div><div class="field-value">e3248935</div></div>
-        <div class="field">
-          <div class="field-label">パスワード</div>
-          <div class="field-value">
-            <div class="pw-wrap">
-              <span class="pw-dots" data-pw="enakuri1">••••••••</span>
-              <button class="pw-toggle" onclick="togglePw(this)">表示</button>
-            </div>
-          </div>
-        </div>
+        <div class="field"><div class="field-label">パスワード</div><div class="field-value"><div class="pw-wrap"><span class="pw-dots" data-pw="enakuri1">••••••••</span><button class="pw-toggle" onclick="togglePw(this)">表示</button></div></div></div>
       </div>
       <div class="card">
         <div class="method-badge login">ログイン</div>
         <div class="vendor-name">アスクル</div>
         <div class="field"><div class="field-label">サイトURL</div><div class="field-value"><a href="https://solution.soloel.com/" target="_blank">https://solution.soloel.com/</a></div></div>
         <div class="field"><div class="field-label">ログインID</div><div class="field-value">73165339</div></div>
-        <div class="field">
-          <div class="field-label">パスワード</div>
-          <div class="field-value">
-            <div class="pw-wrap">
-              <span class="pw-dots" data-pw="ryouheido1">••••••••••</span>
-              <button class="pw-toggle" onclick="togglePw(this)">表示</button>
-            </div>
-          </div>
-        </div>
+        <div class="field"><div class="field-label">パスワード</div><div class="field-value"><div class="pw-wrap"><span class="pw-dots" data-pw="ryouheido1">••••••••••</span><button class="pw-toggle" onclick="togglePw(this)">表示</button></div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 事務所利用 -->
+<div id="office" class="dept-section">
+  <div class="dept-header"><div class="dept-badge">事務所利用</div></div>
+  <div class="category">
+    <div class="category-label line"><span class="icon">💬</span>LINE</div>
+    <div class="cards">
+      <div class="card"><div class="method-badge line">LINE</div><div class="vendor-name">ヒカリ紙工</div><div class="field"><div class="field-label">手段</div><div class="field-value">LINEにて直接発注</div></div></div>
+      <div class="card"><div class="method-badge line">LINE</div><div class="vendor-name">ヤマニ（オーダー商品）</div><div class="field"><div class="field-label">手段</div><div class="field-value">LINEにて直接発注</div></div></div>
+      <div class="card"><div class="method-badge line">LINE</div><div class="vendor-name">フルハシ（オーダー商品）</div><div class="field"><div class="field-label">手段</div><div class="field-value">LINEにて直接発注</div></div></div>
+      <div class="card"><div class="method-badge line">LINE</div><div class="vendor-name">福田商事</div><div class="field"><div class="field-label">手段</div><div class="field-value">LINEにて直接発注</div></div></div>
+      <div class="card"><div class="method-badge line">LINE</div><div class="vendor-name">大津屋</div><div class="field"><div class="field-label">手段</div><div class="field-value">LINEにて直接発注</div></div></div>
+    </div>
+  </div>
+  <div class="category">
+    <div class="category-label login"><span class="icon">🔐</span>ログイン発注</div>
+    <div class="cards">
+      <div class="card">
+        <div class="method-badge login">ログイン</div>
+        <div class="vendor-name">イロドリ（紙印刷）</div>
+        <div class="field"><div class="field-label">サイトURL</div><div class="field-value"><a href="https://www.iro-dori.net/?is_previous=0" target="_blank">https://www.iro-dori.net/</a></div></div>
+        <div class="field"><div class="field-label">ログインID</div><div class="field-value">info@ryouheid.enat.jp</div></div>
+        <div class="field"><div class="field-label">パスワード</div><div class="field-value"><div class="pw-wrap"><span class="pw-dots" data-pw="enakuri">•••••••</span><button class="pw-toggle" onclick="togglePw(this)">表示</button></div></div></div>
       </div>
     </div>
   </div>
@@ -730,11 +530,11 @@
 </div>
 
 <script>
-  function showDept(id) {
+  function showDept(id, btn) {
     document.querySelectorAll('.dept-section').forEach(el => el.classList.remove('visible'));
     document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
     document.getElementById(id).classList.add('visible');
-    event.target.classList.add('active');
+    btn.classList.add('active');
   }
 
   function togglePw(btn) {
