@@ -1266,4 +1266,54 @@
 
   function copyPw(btn) {
     const dots = btn.parentElement.querySelector('.pw-dots');
-    copyText(
+    copyText(dots.dataset.pw, btn);
+  }
+
+  // 検索フィルタ
+  function filterCards() {
+    const q = document.getElementById('search-input').value.toLowerCase();
+    const visible = document.querySelector('.dept-section.visible');
+    if (!visible) return;
+    visible.querySelectorAll('.card').forEach(function(card) {
+      const vendor = (card.dataset.vendor || '').toLowerCase();
+      card.style.display = vendor.includes(q) ? '' : 'none';
+    });
+  }
+
+  // 統計更新
+  function updateStats() {
+    const visible = document.querySelector('.dept-section.visible');
+    if (!visible) return;
+    const cards = visible.querySelectorAll('.card');
+    var line = 0, fax = 0, login = 0;
+    cards.forEach(function(c) {
+      const badge = c.querySelector('.method-badge');
+      if (!badge) return;
+      if (badge.classList.contains('line')) line++;
+      else if (badge.classList.contains('fax')) fax++;
+      else if (badge.classList.contains('login')) login++;
+    });
+    document.getElementById('stat-total').innerHTML = (line + fax + login) + '<span>社</span>';
+    document.getElementById('stat-line').innerHTML = line + '<span>社</span>';
+    document.getElementById('stat-fax').innerHTML = fax + '<span>社</span>';
+    document.getElementById('stat-login').innerHTML = login + '<span>社</span>';
+  }
+
+  // 各部署のカード数
+  function updateCounts() {
+    ['all','shipping','cafe','production','office'].forEach(function(id) {
+      const section = document.getElementById(id);
+      const count = section ? section.querySelectorAll('.card').length : 0;
+      const el = document.getElementById('count-' + id);
+      if (el) el.textContent = count;
+    });
+  }
+
+  // モバイルサイドバー
+  function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('sidebar-overlay').classList.toggle('open');
+  }
+</script>
+</body>
+</html>
