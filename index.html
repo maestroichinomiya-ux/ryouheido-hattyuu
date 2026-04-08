@@ -5,283 +5,108 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>発注管理表 — 有限会社良平堂</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Shippori+Mincho:wght@400;600&display=swap');
-
-  :root {
-    --bg: #f7f4ef;
-    --surface: #ffffff;
-    --ink: #1a1714;
-    --ink-soft: #5a5550;
-    --accent: #8b3a2a;
-    --line-color: #5b9b6b;
-    --fax-color: #3a6b8b;
-    --login-color: #6b4a8b;
-    --border: #ddd8d0;
-    --shadow: 0 2px 12px rgba(26,23,20,0.08);
-  }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    font-family: 'Noto Sans JP', sans-serif;
-    background: var(--bg);
-    color: var(--ink);
-    min-height: 100vh;
-  }
-
-  /* ========== ログイン画面 ========== */
-  #login-screen {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    padding: 24px;
-  }
-
-  .login-box {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 48px 40px;
-    width: 100%;
-    max-width: 380px;
-    box-shadow: 0 8px 40px rgba(26,23,20,0.10);
-    text-align: center;
-  }
-
-  .login-box .company {
-    font-family: 'Shippori Mincho', serif;
-    font-size: 12px;
-    letter-spacing: 0.25em;
-    color: var(--ink-soft);
-    margin-bottom: 8px;
-  }
-
-  .login-box h1 {
-    font-family: 'Shippori Mincho', serif;
-    font-size: 22px;
-    font-weight: 600;
-    color: var(--ink);
-    margin-bottom: 32px;
-  }
-
-  .login-divider {
-    width: 32px;
-    height: 2px;
-    background: var(--accent);
-    margin: 12px auto 32px;
-  }
-
-  .login-box label.field-label {
-    display: block;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    color: var(--ink-soft);
-    margin-bottom: 8px;
-    text-align: left;
-  }
-
-  .login-box input[type="password"] {
-    width: 100%;
-    padding: 12px 16px;
-    border: 1.5px solid var(--border);
-    border-radius: 8px;
-    font-family: 'Noto Sans JP', sans-serif;
-    font-size: 15px;
-    color: var(--ink);
-    background: var(--bg);
-    outline: none;
-    transition: border-color 0.2s;
-    margin-bottom: 12px;
-  }
-
-  .login-box input[type="password"]:focus {
-    border-color: var(--accent);
-  }
-
-  .remember-wrap {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 16px;
-    text-align: left;
-    cursor: pointer;
-  }
-
-  .remember-wrap input[type="checkbox"] {
-    width: 15px;
-    height: 15px;
-    accent-color: var(--accent);
-    cursor: pointer;
-    margin: 0;
-    flex-shrink: 0;
-  }
-
-  .remember-wrap span {
-    font-size: 13px;
-    color: var(--ink-soft);
-    cursor: pointer;
-    user-select: none;
-  }
-
-  .login-box .login-btn {
-    width: 100%;
-    padding: 13px;
-    background: var(--accent);
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    font-family: 'Noto Sans JP', sans-serif;
-    font-size: 14px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    cursor: pointer;
-    transition: opacity 0.2s;
-  }
-
-  .login-box .login-btn:hover { opacity: 0.85; }
-
-  .login-error {
-    margin-top: 14px;
-    font-size: 13px;
-    color: #c0392b;
-    display: none;
-  }
-
-  /* ========== メインコンテンツ ========== */
-  #main-content {
-    display: none;
-    padding: 48px 24px;
-  }
-
-  header { text-align: center; margin-bottom: 56px; }
-  header .company { font-family: 'Shippori Mincho', serif; font-size: 13px; letter-spacing: 0.25em; color: var(--ink-soft); margin-bottom: 10px; }
-  header h1 { font-family: 'Shippori Mincho', serif; font-size: 32px; font-weight: 600; letter-spacing: 0.1em; color: var(--ink); margin-bottom: 8px; }
-  header .subtitle { font-size: 13px; color: var(--ink-soft); letter-spacing: 0.05em; }
-  .divider { width: 48px; height: 2px; background: var(--accent); margin: 16px auto; }
-
-  .header-logout {
-    position: fixed;
-    top: 16px;
-    right: 20px;
-    font-size: 12px;
-    color: var(--ink-soft);
-    cursor: pointer;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 6px 14px;
-    transition: all 0.2s;
-    z-index: 100;
-  }
-  .header-logout:hover { border-color: var(--accent); color: var(--accent); }
-
-  .tabs { display: flex; gap: 8px; justify-content: center; margin-bottom: 40px; flex-wrap: wrap; }
-  .tab-btn { padding: 10px 28px; border: 1.5px solid var(--border); background: var(--surface); border-radius: 40px; font-family: 'Noto Sans JP', sans-serif; font-size: 14px; font-weight: 500; color: var(--ink-soft); cursor: pointer; transition: all 0.2s ease; letter-spacing: 0.05em; }
-  .tab-btn:hover { border-color: var(--accent); color: var(--accent); }
-  .tab-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
-
-  .dept-section { display: none; max-width: 860px; margin: 0 auto; animation: fadeIn 0.3s ease; }
-  .dept-section.visible { display: block; }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-
-  .dept-block { margin-bottom: 48px; }
-  .dept-header { display: flex; align-items: center; gap: 16px; margin-bottom: 28px; }
-  .dept-badge { font-family: 'Shippori Mincho', serif; font-size: 22px; font-weight: 600; color: var(--accent); }
-
-  .category { margin-bottom: 32px; }
-  .category-label { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; letter-spacing: 0.12em; padding: 4px 14px; border-radius: 4px; margin-bottom: 16px; }
-  .category-label.line { background: #e6f5eb; color: var(--line-color); }
-  .category-label.fax { background: #e5eff7; color: var(--fax-color); }
-  .category-label.login { background: #ede8f5; color: var(--login-color); }
-  .category-label .icon { font-size: 15px; }
-
-  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
-  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px 22px; box-shadow: var(--shadow); transition: box-shadow 0.2s ease; }
-  .card:hover { box-shadow: 0 4px 20px rgba(26,23,20,0.12); }
-  .card .vendor-name { font-size: 17px; font-weight: 700; margin-bottom: 14px; color: var(--ink); }
-  .card .field { margin-bottom: 10px; }
-  .card .field:last-child { margin-bottom: 0; }
-  .card .field-label { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; color: var(--ink-soft); margin-bottom: 3px; }
-  .card .field-value { font-size: 13px; color: var(--ink); word-break: break-all; }
-  .card .field-value a { color: var(--login-color); text-decoration: none; font-size: 12px; }
-  .card .field-value a:hover { text-decoration: underline; }
-
-  .usage-tag { display: inline-block; background: #fef3e2; color: #9a6b1a; font-size: 11px; font-weight: 600; padding: 2px 10px; border-radius: 4px; margin-bottom: 10px; line-height: 1.6; }
-
-  .method-badge { display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 10px; border-radius: 20px; margin-bottom: 12px; letter-spacing: 0.05em; }
-  .method-badge.line { background: #e6f5eb; color: var(--line-color); }
-  .method-badge.fax { background: #e5eff7; color: var(--fax-color); }
-  .method-badge.login { background: #ede8f5; color: var(--login-color); }
-
-  .pw-wrap { display: flex; align-items: center; gap: 8px; }
-  .pw-dots { letter-spacing: 3px; font-size: 14px; }
-  .pw-toggle { background: none; border: none; cursor: pointer; font-size: 13px; color: var(--ink-soft); padding: 0; line-height: 1; }
-  .pw-toggle:hover { color: var(--accent); }
-
-  .print-note { text-align: center; margin-top: 56px; padding-top: 24px; border-top: 1px solid var(--border); font-size: 12px; color: var(--ink-soft); }
-
-  @media print {
-    #login-screen { display: none !important; }
-    #main-content { display: block !important; }
-    .tabs, .header-logout { display: none; }
-    .dept-section { display: block !important; }
-    .dept-block { page-break-after: always; }
-    .pw-toggle { display: none; }
-    body { padding: 24px; background: white; }
-  }
-  @media (max-width: 600px) {
-    header h1 { font-size: 24px; }
-    .cards { grid-template-columns: 1fr; }
-    .tab-btn { padding: 8px 18px; font-size: 13px; }
-    .login-box { padding: 36px 24px; }
-  }
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Shippori+Mincho:wght@400;600&display=swap');
+:root{--bg:#f7f4ef;--surface:#fff;--ink:#1a1714;--ink-soft:#5a5550;--accent:#8b3a2a;--line-color:#5b9b6b;--fax-color:#3a6b8b;--login-color:#6b4a8b;--border:#ddd8d0;--shadow:0 2px 12px rgba(26,23,20,.08)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh}
+#login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:24px}
+.login-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:48px 40px;width:100%;max-width:380px;box-shadow:0 8px 40px rgba(26,23,20,.10);text-align:center}
+.login-box .company{font-family:'Shippori Mincho',serif;font-size:12px;letter-spacing:.25em;color:var(--ink-soft);margin-bottom:8px}
+.login-box h1{font-family:'Shippori Mincho',serif;font-size:22px;font-weight:600;color:var(--ink);margin-bottom:32px}
+.login-divider{width:32px;height:2px;background:var(--accent);margin:12px auto 32px}
+.login-box .fl{display:block;font-size:11px;font-weight:700;letter-spacing:.12em;color:var(--ink-soft);margin-bottom:8px;text-align:left}
+.login-box input[type=password]{width:100%;padding:12px 16px;border:1.5px solid var(--border);border-radius:8px;font-family:'Noto Sans JP',sans-serif;font-size:15px;color:var(--ink);background:var(--bg);outline:none;transition:border-color .2s;margin-bottom:12px}
+.login-box input[type=password]:focus{border-color:var(--accent)}
+.remember-wrap{display:flex;align-items:center;gap:8px;margin-bottom:16px;text-align:left;cursor:pointer}
+.remember-wrap input[type=checkbox]{width:15px;height:15px;accent-color:var(--accent);cursor:pointer;margin:0;flex-shrink:0}
+.remember-wrap span{font-size:13px;color:var(--ink-soft);user-select:none}
+.login-btn{width:100%;padding:13px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-family:'Noto Sans JP',sans-serif;font-size:14px;font-weight:700;letter-spacing:.08em;cursor:pointer;transition:opacity .2s}
+.login-btn:hover{opacity:.85}
+.login-error{margin-top:14px;font-size:13px;color:#c0392b;display:none}
+#main-content{display:none;padding:48px 24px}
+header{text-align:center;margin-bottom:56px}
+header .company{font-family:'Shippori Mincho',serif;font-size:13px;letter-spacing:.25em;color:var(--ink-soft);margin-bottom:10px}
+header h1{font-family:'Shippori Mincho',serif;font-size:32px;font-weight:600;letter-spacing:.1em;color:var(--ink);margin-bottom:8px}
+header .subtitle{font-size:13px;color:var(--ink-soft);letter-spacing:.05em}
+.divider{width:48px;height:2px;background:var(--accent);margin:16px auto}
+.header-logout{position:fixed;top:16px;right:20px;font-size:12px;color:var(--ink-soft);cursor:pointer;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:6px 14px;transition:all .2s;z-index:100}
+.header-logout:hover{border-color:var(--accent);color:var(--accent)}
+.tabs{display:flex;gap:8px;justify-content:center;margin-bottom:40px;flex-wrap:wrap}
+.tab-btn{padding:10px 28px;border:1.5px solid var(--border);background:var(--surface);border-radius:40px;font-family:'Noto Sans JP',sans-serif;font-size:14px;font-weight:500;color:var(--ink-soft);cursor:pointer;transition:all .2s ease;letter-spacing:.05em}
+.tab-btn:hover{border-color:var(--accent);color:var(--accent)}
+.tab-btn.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.dept-section{display:none;max-width:860px;margin:0 auto;animation:fadeIn .3s ease}
+.dept-section.visible{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.dept-block{margin-bottom:48px}
+.dept-header{display:flex;align-items:center;gap:16px;margin-bottom:28px}
+.dept-badge{font-family:'Shippori Mincho',serif;font-size:22px;font-weight:600;color:var(--accent)}
+.category{margin-bottom:32px}
+.category-label{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:700;letter-spacing:.12em;padding:4px 14px;border-radius:4px;margin-bottom:16px}
+.category-label.line{background:#e6f5eb;color:var(--line-color)}
+.category-label.fax{background:#e5eff7;color:var(--fax-color)}
+.category-label.login{background:#ede8f5;color:var(--login-color)}
+.category-label .icon{font-size:15px}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 22px;box-shadow:var(--shadow);transition:box-shadow .2s ease}
+.card:hover{box-shadow:0 4px 20px rgba(26,23,20,.12)}
+.card .vendor-name{font-size:17px;font-weight:700;margin-bottom:14px;color:var(--ink)}
+.card .field{margin-bottom:10px}
+.card .field:last-child{margin-bottom:0}
+.card .field-label{font-size:10px;font-weight:700;letter-spacing:.12em;color:var(--ink-soft);margin-bottom:3px}
+.card .field-value{font-size:13px;color:var(--ink);word-break:break-all}
+.card .field-value a{color:var(--login-color);text-decoration:none;font-size:12px}
+.card .field-value a:hover{text-decoration:underline}
+.usage-tag{display:inline-block;background:#fef3e2;color:#9a6b1a;font-size:11px;font-weight:600;padding:2px 10px;border-radius:4px;margin-bottom:10px;line-height:1.6}
+.method-badge{display:inline-block;font-size:11px;font-weight:600;padding:2px 10px;border-radius:20px;margin-bottom:12px;letter-spacing:.05em}
+.method-badge.line{background:#e6f5eb;color:var(--line-color)}
+.method-badge.fax{background:#e5eff7;color:var(--fax-color)}
+.method-badge.login{background:#ede8f5;color:var(--login-color)}
+.pw-wrap{display:flex;align-items:center;gap:8px}
+.pw-dots{letter-spacing:3px;font-size:14px}
+.pw-toggle{background:none;border:none;cursor:pointer;font-size:13px;color:var(--ink-soft);padding:0;line-height:1}
+.pw-toggle:hover{color:var(--accent)}
+.print-note{text-align:center;margin-top:56px;padding-top:24px;border-top:1px solid var(--border);font-size:12px;color:var(--ink-soft)}
+@media print{#login-screen{display:none!important}#main-content{display:block!important}.tabs,.header-logout{display:none}.dept-section{display:block!important}.dept-block{page-break-after:always}.pw-toggle{display:none}body{padding:24px;background:white}}
+@media(max-width:600px){header h1{font-size:24px}.cards{grid-template-columns:1fr}.tab-btn{padding:8px 18px;font-size:13px}.login-box{padding:36px 24px}}
 </style>
 </head>
 <body>
-
-<!-- ログイン画面 -->
 <div id="login-screen">
   <div class="login-box">
     <div class="company">有限会社良平堂</div>
     <h1>発注管理表</h1>
     <div class="login-divider"></div>
-    <label class="field-label">パスワード</label>
-    <input type="password" id="pw-input" placeholder="パスワードを入力" onkeydown="if(event.key==='Enter')checkPassword()">
-    <label class="remember-wrap" onclick="document.getElementById('remember-me').click()">
-      <input type="checkbox" id="remember-me" onclick="event.stopPropagation()">
+    <label class="fl">パスワード</label>
+    <input type="password" id="pw-input" placeholder="パスワードを入力">
+    <label class="remember-wrap">
+      <input type="checkbox" id="remember-me">
       <span>次回から自動でログイン</span>
     </label>
-    <button class="login-btn" onclick="checkPassword()">ログイン</button>
+    <button class="login-btn" id="login-btn">ログイン</button>
     <div class="login-error" id="login-error">パスワードが違います</div>
   </div>
 </div>
 
-<!-- メインコンテンツ -->
 <div id="main-content">
-  <button class="header-logout" onclick="logout()">ログアウト</button>
-
+  <button class="header-logout" id="logout-btn">ログアウト</button>
   <header>
     <div class="company">有限会社良平堂</div>
     <h1>発注管理表</h1>
     <div class="divider"></div>
     <div class="subtitle">各部署の発注先・手段・ログイン情報</div>
   </header>
-
   <div class="tabs">
-    <button class="tab-btn active" onclick="showDept('all', this)">全部署</button>
-    <button class="tab-btn" onclick="showDept('shipping', this)">出荷利用</button>
-    <button class="tab-btn" onclick="showDept('cafe', this)">カフェ利用</button>
-    <button class="tab-btn" onclick="showDept('production', this)">製造利用</button>
-    <button class="tab-btn" onclick="showDept('office', this)">事務所利用</button>
+    <button class="tab-btn active" data-target="all">全部署</button>
+    <button class="tab-btn" data-target="shipping">出荷利用</button>
+    <button class="tab-btn" data-target="cafe">カフェ利用</button>
+    <button class="tab-btn" data-target="production">製造利用</button>
+    <button class="tab-btn" data-target="office">事務所利用</button>
   </div>
 
   <!-- 全部署 -->
   <div id="all" class="dept-section visible">
-    <div style="max-width:860px;margin:0 auto;">
-
-      <!-- 出荷利用 -->
+    <div style="max-width:860px;margin:0 auto">
       <div class="dept-block">
         <div class="dept-header"><div class="dept-badge">出荷利用</div></div>
         <div class="category">
@@ -296,32 +121,12 @@
         <div class="category">
           <div class="category-label login"><span class="icon">🔐</span>ログイン発注</div>
           <div class="cards">
-            <div class="card">
-              <div class="method-badge login">ログイン</div>
-              <div class="vendor-name">アスクル</div>
-              <div class="field"><div class="field-label">サイトURL</div><div class="field-value"><a href="https://solution.soloel.com/" target="_blank">https://solution.soloel.com/</a></div></div>
-              <div class="field"><div class="field-label">ログインID</div><div class="field-value">73165339</div></div>
-              <div class="field"><div class="field-label">パスワード</div><div class="field-value"><div class="pw-wrap"><span class="pw-dots" data-pw="ryouheido1">••••••••••</span><button class="pw-toggle" onclick="togglePw(this)">表示</button></div></div></div>
-            </div>
-            <div class="card">
-              <div class="method-badge login">ログイン</div>
-              <div class="vendor-name">ヘッズ</div>
-              <div class="field"><div class="field-label">サイトURL</div><div class="field-value"><a href="https://www.e-heads.co.jp/shop/customer/menu.aspx" target="_blank">e-heads.co.jp</a></div></div>
-              <div class="field"><div class="field-label">ログインID</div><div class="field-value"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="8be2e5ede4cbf9f2e4fee3eee2efa5eee5eaffa5e1fb">[email&#160;protected]</a></div></div>
-              <div class="field"><div class="field-label">パスワード</div><div class="field-value"><div class="pw-wrap"><span class="pw-dots" data-pw="enakuri1">••••••••</span><button class="pw-toggle" onclick="togglePw(this)">表示</button></div></div></div>
-            </div>
-            <div class="card">
-              <div class="method-badge login">ログイン</div>
-              <div class="vendor-name">シモジマ</div>
-              <div class="field"><div class="field-label">サイトURL</div><div class="field-value"><a href="https://www.e-heads.co.jp/shop/customer/menu.aspx" target="_blank">e-heads.co.jp</a></div></div>
-              <div class="field"><div class="field-label">ログインID</div><div class="field-value">00003050abc</div></div>
-              <div class="field"><div class="field-label">パスワード</div><div class="field-value"><div class="pw-wrap"><span class="pw-dots" data-pw="enakuri1">••••••••</span><button class="pw-toggle" onclick="togglePw(this)">表示</button></div></div></div>
-            </div>
+            <div class="card"><div class="method-badge login">ログイン</div><div class="vendor-name">アスクル</div><div class="field"><div class="field-label">サイトURL</div><div class="field-value"><a href="https://solution.soloel.com/" target="_blank">https://solution.soloel.com/</a></div></div><div class="field"><div class="field-label">ログインID</div><div class="field-value">73165339</div></div><div class="field"><div class="field-label">パスワード</div><div class="field-value"><div class="pw-wrap"><span class="pw-dots" data-pw="ryouheido1">••••••••••</span><button class="pw-toggle">表示</button></div></div></div></div>
+            <div class="card"><div class="method-badge login">ログイン</div><div class="vendor-name">ヘッズ</div><div class="field"><div class="field-label">サイトURL</div><div class="field-value"><a href="https://www.e-heads.co.jp/shop/customer/menu.aspx" target="_blank">e-heads.co.jp</a></div></div><div class="field"><div class="field-label">ログインID</div><div class="field-value">info@ryouheid.enat.jp</div></div><div class="field"><div class="field-label">パスワード</div><div class="field-value"><div class="pw-wrap"><span class="pw-dots" data-pw="enakuri1">••••••••</span><button class="pw-toggle">表示</button></div></div></div></div>
+            <div class="card"><div class="method-badge login">ログイン</div><div class="vendor-name">シモジマ</div><div class="field"><div class="field-label">サイトURL</div><div class="field-value"><a href="https://www.e-heads.co.jp/shop/customer/menu.aspx" target="_blank">e-heads.co.jp</a></div></div><div class="field"><div class="field-label">ログインID</div><div class="field-value">00003050abc</div></div><div class="field"><div class="field-label">パスワード</div><div class="field-value"><div class="pw-wrap"><span class="pw-dots" data-pw="enakuri1">••••••••</span><button class="pw-toggle">表示</button></div></div></div></div>
           </div>
         </div>
       </div>
-
-      <!-- カフェ利用 -->
       <div class="dept-block">
         <div class="dept-header"><div class="dept-badge">カフェ利用</div></div>
         <div class="category">
@@ -334,18 +139,10 @@
         <div class="category">
           <div class="category-label login"><span class="icon">🔐</span>ログイン発注</div>
           <div class="cards">
-            <div class="card">
-              <div class="method-badge login">ログイン</div>
-              <div class="vendor-name">シモジマ</div>
-              <div class="field"><div class="field-label">サイトURL</div><div class="field-value"><a href="https://www.e-heads.co.jp/shop/customer/menu.aspx" target="_blank">e-heads.co.jp</a></div></div>
-              <div class="field"><div class="field-label">ログインID</div><div class="field-value"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="741d1a121b34060d1b011c111d105a111a15005a1e04">[email&#160;protected]</a></div></div>
-              <div class="field"><div class="field-label">パスワード</div><div class="field-value"><div class="pw-wrap"><span class="pw-dots" data-pw="enakuri1">••••••••</span><button class="pw-toggle" onclick="togglePw(this)">表示</button></div></div></div>
-            </div>
+            <div class="card"><div class="method-badge login">ログイン</div><div class="vendor-name">シモジマ</div><div class="field"><div class="field-label">サイトURL</div><div class="field-value"><a href="https://www.e-heads.co.jp/shop/customer/menu.aspx" target="_blank">e-heads.co.jp</a></div></div><div class="field"><div class="field-label">ログインID</div><div class="field-value">info@ryouheid.enat.jp</div></div><div class="field"><div class="field-label">パスワード</div><div class="field-value"><div class="pw-wrap"><span class="pw-dots" data-pw="enakuri1">••••••••</span><button class="pw-toggle">表示</button></div></div></div></div>
           </div>
         </div>
       </div>
-
-      <!-- 製造利用 -->
       <div class="dept-block">
         <div class="dept-header"><div class="dept-badge">製造利用</div></div>
         <div class="category">
@@ -368,25 +165,11 @@
         <div class="category">
           <div class="category-label login"><span class="icon">🔐</span>ログイン発注</div>
           <div class="cards">
-            <div class="card">
-              <div class="method-badge login">ログイン</div>
-              <div class="vendor-name">モノタロウ</div>
-              <div class="field"><div class="field-label">サイトURL</div><div class="field-value"><a href="https://www.monotaro.com/login/" target="_blank">https://www.monotaro.com/login/</a></div></div>
-              <div class="field"><div class="field-label">ログインID</div><div class="field-value">e3248935</div></div>
-              <div class="field"><div class="field-label">パスワード</div><div class="field-value"><div class="pw-wrap"><span class="pw-dots" data-pw="enakuri1">••••••••</span><button class="pw-toggle" onclick="togglePw(this)">表示</button></div></div></div>
-            </div>
-            <div class="card">
-              <div class="method-badge login">ログイン</div>
-              <div class="vendor-name">アスクル</div>
-              <div class="field"><div class="field-label">サイトURL</div><div class="field-value"><a href="https://solution.soloel.com/" target="_blank">https://solution.soloel.com/</a></div></div>
-              <div class="field"><div class="field-label">ログインID</div><div class="field-value">73165339</div></div>
-              <div class="field"><div class="field-label">パスワード</div><div class="field-value"><div class="pw-wrap"><span class="pw-dots" data-pw="ryouheido1">••••••••••</span><button class="pw-toggle" onclick="togglePw(this)">表示</button></div></div></div>
-            </div>
+            <div class="card"><div class="method-badge login">ログイン</div><div class="vendor-name">モノタロウ</div><div class="field"><div class="field-label">サイトURL</div><div class="field-value"><a href="https://www.monotaro.com/login/" target="_blank">https://www.monotaro.com/login/</a></div></div><div class="field"><div class="field-label">ログインID</div><div class="field-value">e3248935</div></div><div class="field"><div class="field-label">パスワード</div><div class="field-value"><div class="pw-wrap"><span class="pw-dots" data-pw="enakuri1">••••••••</span><button class="pw-toggle">表示</button></div></div></div></div>
+            <div class="card"><div class="method-badge login">ログイン</div><div class="vendor-name">アスクル</div><div class="field"><div class="field-label">サイトURL</div><div class="field-value"><a href="https://solution.soloel.com/" target="_blank">https://solution.soloel.com/</a></div></div><div class="field"><div class="field-label">ログインID</div><div class="field-value">73165339</div></div><div class="field"><div class="field-label">パスワード</div><div class="field-value"><div class="pw-wrap"><span class="pw-dots" data-pw="ryouheido1">••••••••••</span><button class="pw-toggle">表示</button></div></div></div></div>
           </div>
         </div>
       </div>
-
-      <!-- 事務所利用 -->
       <div class="dept-block">
         <div class="dept-header"><div class="dept-badge">事務所利用</div></div>
         <div class="category">
@@ -402,219 +185,112 @@
         <div class="category">
           <div class="category-label login"><span class="icon">🔐</span>ログイン発注</div>
           <div class="cards">
-            <div class="card">
-              <div class="method-badge login">ログイン</div>
-              <div class="vendor-name">大判マスター</div>
-              <div class="usage-tag">パネル・ポスター（土日祝 休）</div>
-              <div class="field"><div class="field-label">サイトURL</div><div class="field-value"><a href="https://ooban-master.com/" target="_blank">https://ooban-master.com/</a></div></div>
-              <div class="field"><div class="field-label">ログインID</div><div class="field-value"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="c5acaba3aa85b7bcaab0ada0aca1eba0aba4b1ebafb5">[email&#160;protected]</a></div></div>
-              <div class="field"><div class="field-label">パスワード</div><div class="field-value"><div class="pw-wrap"><span class="pw-dots" data-pw="enakuri">•••••••</span><button class="pw-toggle" onclick="togglePw(this)">表示</button></div></div></div>
-            </div>
-            <div class="card">
-              <div class="method-badge login">ログイン</div>
-              <div class="vendor-name">タぺストーリー</div>
-              <div class="usage-tag">催事の巻き・垂れ幕（ターポリン印刷）</div>
-              <div class="field"><div class="field-label">サイトURL</div><div class="field-value"><a href="https://tapestory.main.jp/index.html" target="_blank">https://tapestory.main.jp/</a></div></div>
-              <div class="field"><div class="field-label">ログインID</div><div class="field-value"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="026b6c646d42707b6d776a676b662c676c63762c6872">[email&#160;protected]</a></div></div>
-              <div class="field"><div class="field-label">パスワード</div><div class="field-value"><div class="pw-wrap"><span class="pw-dots" data-pw="enakuri1">••••••••</span><button class="pw-toggle" onclick="togglePw(this)">表示</button></div></div></div>
-            </div>
-            <div class="card">
-              <div class="method-badge login">ログイン</div>
-              <div class="vendor-name">印刷通販デジタ</div>
-              <div class="usage-tag">良平堂Tシャツ・少量シール</div>
-              <div class="field"><div class="field-label">サイトURL</div><div class="field-value"><a href="https://www.digitaprint.jp/" target="_blank">https://www.digitaprint.jp/</a></div></div>
-              <div class="field"><div class="field-label">ログインID</div><div class="field-value"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="046d6a626b44767d6b716c616d602a616a65702a6e74">[email&#160;protected]</a></div></div>
-              <div class="field"><div class="field-label">パスワード</div><div class="field-value"><div class="pw-wrap"><span class="pw-dots" data-pw="enakuri">•••••••</span><button class="pw-toggle" onclick="togglePw(this)">表示</button></div></div></div>
-            </div>
-            <div class="card">
-              <div class="method-badge login">ログイン</div>
-              <div class="vendor-name">グラフィックデザイン</div>
-              <div class="usage-tag">少数包装紙・箔押し・パネル・ポスター（ほぼ年中無休）</div>
-              <div class="field"><div class="field-label">サイトURL</div><div class="field-value"><a href="https://www.graphic.jp/" target="_blank">https://www.graphic.jp/</a></div></div>
-              <div class="field"><div class="field-label">ログインID</div><div class="field-value"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="e38a8d858ca3919a8c968b868a87cd868d8297cd8993">[email&#160;protected]</a></div></div>
-              <div class="field"><div class="field-label">パスワード</div><div class="field-value"><div class="pw-wrap"><span class="pw-dots" data-pw="enakuri1">••••••••</span><button class="pw-toggle" onclick="togglePw(this)">表示</button></div></div></div>
-            </div>
-            <div class="card">
-              <div class="method-badge login">ログイン</div>
-              <div class="vendor-name">イロドリ（紙印刷）</div>
-              <div class="field"><div class="field-label">サイトURL</div><div class="field-value"><a href="https://www.iro-dori.net/?is_previous=0" target="_blank">https://www.iro-dori.net/</a></div></div>
-              <div class="field"><div class="field-label">ログインID</div><div class="field-value"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="f29b9c949db2808b9d879a979b96dc979c9386dc9882">[email&#160;protected]</a></div></div>
-              <div class="field"><div class="field-label">パスワード</div><div class="field-value"><div class="pw-wrap"><span class="pw-dots" data-pw="enakuri">•••••••</span><button class="pw-toggle" onclick="togglePw(this)">表示</button></div></div></div>
-            </div>
+            <div class="card"><div class="method-badge login">ログイン</div><div class="vendor-name">大判マスター</div><div class="usage-tag">パネル・ポスター（土日祝 休）</div><div class="field"><div class="field-label">サイトURL</div><div class="field-value"><a href="https://ooban-master.com/" target="_blank">https://ooban-master.com/</a></div></div><div class="field"><div class="field-label">ログインID</div><div class="field-value">info@ryouheid.enat.jp</div></div><div class="field"><div class="field-label">パスワード</div><div class="field-value"><div class="pw-wrap"><span class="pw-dots" data-pw="enakuri">•••••••</span><button class="pw-toggle">表示</button></div></div></div></div>
+            <div class="card"><div class="method-badge login">ログイン</div><div class="vendor-name">タぺストーリー</div><div class="usage-tag">催事の巻き・垂れ幕（ターポリン印刷）</div><div class="field"><div class="field-label">サイトURL</div><div class="field-value"><a href="https://tapestory.main.jp/index.html" target="_blank">https://tapestory.main.jp/</a></div></div><div class="field"><div class="field-label">ログインID</div><div class="field-value">info@ryouheid.enat.jp</div></div><div class="field"><div class="field-label">パスワード</div><div class="field-value"><div class="pw-wrap"><span class="pw-dots" data-pw="enakuri1">••••••••</span><button class="pw-toggle">表示</button></div></div></div></div>
+            <div class="card"><div class="method-badge login">ログイン</div><div class="vendor-name">印刷通販デジタ</div><div class="usage-tag">良平堂Tシャツ・少量シール</div><div class="field"><div class="field-label">サイトURL</div><div class="field-value"><a href="https://www.digitaprint.jp/" target="_blank">https://www.digitaprint.jp/</a></div></div><div class="field"><div class="field-label">ログインID</div><div class="field-value">info@ryouheid.enat.jp</div></div><div class="field"><div class="field-label">パスワード</div><div class="field-value"><div class="pw-wrap"><span class="pw-dots" data-pw="enakuri">•••••••</span><button class="pw-toggle">表示</button></div></div></div></div>
+            <div class="card"><div class="method-badge login">ログイン</div><div class="vendor-name">グラフィックデザイン</div><div class="usage-tag">少数包装紙・箔押し・パネル・ポスター（ほぼ年中無休）</div><div class="field"><div class="field-label">サイトURL</div><div class="field-value"><a href="https://www.graphic.jp/" target="_blank">https://www.graphic.jp/</a></div></div><div class="field"><div class="field-label">ログインID</div><div class="field-value">info@ryouheid.enat.jp</div></div><div class="field"><div class="field-label">パスワード</div><div class="field-value"><div class="pw-wrap"><span class="pw-dots" data-pw="enakuri1">••••••••</span><button class="pw-toggle">表示</button></div></div></div></div>
+            <div class="card"><div class="method-badge login">ログイン</div><div class="vendor-name">イロドリ（紙印刷）</div><div class="field"><div class="field-label">サイトURL</div><div class="field-value"><a href="https://www.iro-dori.net/?is_previous=0" target="_blank">https://www.iro-dori.net/</a></div></div><div class="field"><div class="field-label">ログインID</div><div class="field-value">info@ryouheid.enat.jp</div></div><div class="field"><div class="field-label">パスワード</div><div class="field-value"><div class="pw-wrap"><span class="pw-dots" data-pw="enakuri">•••••••</span><button class="pw-toggle">表示</button></div></div></div></div>
           </div>
         </div>
       </div>
-
     </div>
   </div>
 
   <!-- 出荷利用 -->
   <div id="shipping" class="dept-section">
     <div class="dept-header"><div class="dept-badge">出荷利用</div></div>
-    <div class="category">
-      <div class="category-label line"><span class="icon">💬</span>LINE</div>
-      <div class="cards">
-        <div class="card"><div class="method-badge line">LINE</div><div class="vendor-name">フルハシ</div></div>
-        <div class="card"><div class="method-badge line">LINE</div><div class="vendor-name">ヤマニ</div></div>
-        <div class="card"><div class="method-badge line">LINE</div><div class="vendor-name">恵那段ボール</div></div>
-        <div class="card"><div class="method-badge line">LINE</div><div class="vendor-name">イサジ</div></div>
-      </div>
-    </div>
-    <div class="category">
-      <div class="category-label login"><span class="icon">🔐</span>ログイン発注</div>
-      <div class="cards">
-        <div class="card">
-          <div class="method-badge login">ログイン</div>
-          <div class="vendor-name">アスクル</div>
-          <div class="field"><div class="field-label">サイトURL</div><div class="field-value"><a href="https://solution.soloel.com/" target="_blank">https://solution.soloel.com/</a></div></div>
-          <div class="field"><div class="field-label">ログインID</div><div class="field-value">73165339</div></div>
-          <div class="field"><div class="field-label">パスワード</div><div class="field-value"><div class="pw-wrap"><span class="pw-dots" data-pw="ryouheido1">••••••••••</span><button class="pw-toggle" onclick="togglePw(this)">表示</button></div></div></div>
-        </div>
-        <div class="card">
-          <div class="method-badge login">ログイン</div>
-          <div class="vendor-name">ヘッズ</div>
-          <div class="field"><div class="field-label">サイトURL</div><div class="field-value"><a href="https://www.e-heads.co.jp/shop/customer/menu.aspx" target="_blank">e-heads.co.jp</a></div></div>
-          <div class="field"><div class="field-label">ログインID</div><div class="field-value"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="6f060109002f1d16001a070a060b410a010e1b41051f">[email&#160;protected]</a></div></div>
-          <div class="field"><div class="field-label">パスワード</div><div class="field-value"><div class="pw-wrap"><span class="pw-dots" data-pw="enakuri1">••••••••</span><button class="pw-toggle" onclick="togglePw(this)">表示</button></div></div></div>
-        </div>
-        <div class="card">
-          <div class="method-badge login">ログイン</div>
-          <div class="vendor-name">シモジマ</div>
-          <div class="field"><div class="field-label">サイトURL</div><div class="field-value"><a href="https://www.e-heads.co.jp/shop/customer/menu.aspx" target="_blank">e-heads.co.jp</a></div></div>
-          <div class="field"><div class="field-label">ログインID</div><div class="field-value">00003050abc</div></div>
-          <div class="field"><div class="field-label">パスワード</div><div class="field-value"><div class="pw-wrap"><span class="pw-dots" data-pw="enakuri1">••••••••</span><button class="pw-toggle" onclick="togglePw(this)">表示</button></div></div></div>
-        </div>
-      </div>
-    </div>
+    <div class="category"><div class="category-label line"><span class="icon">💬</span>LINE</div><div class="cards"><div class="card"><div class="method-badge line">LINE</div><div class="vendor-name">フルハシ</div></div><div class="card"><div class="method-badge line">LINE</div><div class="vendor-name">ヤマニ</div></div><div class="card"><div class="method-badge line">LINE</div><div class="vendor-name">恵那段ボール</div></div><div class="card"><div class="method-badge line">LINE</div><div class="vendor-name">イサジ</div></div></div></div>
+    <div class="category"><div class="category-label login"><span class="icon">🔐</span>ログイン発注</div><div class="cards"><div class="card"><div class="method-badge login">ログイン</div><div class="vendor-name">アスクル</div><div class="field"><div class="field-label">サイトURL</div><div class="field-value"><a href="https://solution.soloel.com/" target="_blank">https://solution.soloel.com/</a></div></div><div class="field"><div class="field-label">ログインID</div><div class="field-value">73165339</div></div><div class="field"><div class="field-label">パスワード</div><div class="field-value"><div class="pw-wrap"><span class="pw-dots" data-pw="ryouheido1">••••••••••</span><button class="pw-toggle">表示</button></div></div></div></div><div class="card"><div class="method-badge login">ログイン</div><div class="vendor-name">ヘッズ</div><div class="field"><div class="field-label">サイトURL</div><div class="field-value"><a href="https://www.e-heads.co.jp/shop/customer/menu.aspx" target="_blank">e-heads.co.jp</a></div></div><div class="field"><div class="field-label">ログインID</div><div class="field-value">info@ryouheid.enat.jp</div></div><div class="field"><div class="field-label">パスワード</div><div class="field-value"><div class="pw-wrap"><span class="pw-dots" data-pw="enakuri1">••••••••</span><button class="pw-toggle">表示</button></div></div></div></div><div class="card"><div class="method-badge login">ログイン</div><div class="vendor-name">シモジマ</div><div class="field"><div class="field-label">サイトURL</div><div class="field-value"><a href="https://www.e-heads.co.jp/shop/customer/menu.aspx" target="_blank">e-heads.co.jp</a></div></div><div class="field"><div class="field-label">ログインID</div><div class="field-value">00003050abc</div></div><div class="field"><div class="field-label">パスワード</div><div class="field-value"><div class="pw-wrap"><span class="pw-dots" data-pw="enakuri1">••••••••</span><button class="pw-toggle">表示</button></div></div></div></div></div></div>
   </div>
 
   <!-- カフェ利用 -->
   <div id="cafe" class="dept-section">
     <div class="dept-header"><div class="dept-badge">カフェ利用</div></div>
-    <div class="category">
-      <div class="category-label fax"><span class="icon">📠</span>ファックス</div>
-      <div class="cards">
-        <div class="card"><div class="method-badge fax">ファックス</div><div class="vendor-name">めいらく</div></div>
-        <div class="card"><div class="method-badge fax">ファックス</div><div class="vendor-name">フーズワールド</div></div>
-      </div>
-    </div>
-    <div class="category">
-      <div class="category-label login"><span class="icon">🔐</span>ログイン発注</div>
-      <div class="cards">
-        <div class="card">
-          <div class="method-badge login">ログイン</div>
-          <div class="vendor-name">シモジマ</div>
-          <div class="field"><div class="field-label">サイトURL</div><div class="field-value"><a href="https://www.e-heads.co.jp/shop/customer/menu.aspx" target="_blank">e-heads.co.jp</a></div></div>
-          <div class="field"><div class="field-label">ログインID</div><div class="field-value"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="deb7b0b8b19eaca7b1abb6bbb7baf0bbb0bfaaf0b4ae">[email&#160;protected]</a></div></div>
-          <div class="field"><div class="field-label">パスワード</div><div class="field-value"><div class="pw-wrap"><span class="pw-dots" data-pw="enakuri1">••••••••</span><button class="pw-toggle" onclick="togglePw(this)">表示</button></div></div></div>
-        </div>
-      </div>
-    </div>
+    <div class="category"><div class="category-label fax"><span class="icon">📠</span>ファックス</div><div class="cards"><div class="card"><div class="method-badge fax">ファックス</div><div class="vendor-name">めいらく</div></div><div class="card"><div class="method-badge fax">ファックス</div><div class="vendor-name">フーズワールド</div></div></div></div>
+    <div class="category"><div class="category-label login"><span class="icon">🔐</span>ログイン発注</div><div class="cards"><div class="card"><div class="method-badge login">ログイン</div><div class="vendor-name">シモジマ</div><div class="field"><div class="field-label">サイトURL</div><div class="field-value"><a href="https://www.e-heads.co.jp/shop/customer/menu.aspx" target="_blank">e-heads.co.jp</a></div></div><div class="field"><div class="field-label">ログインID</div><div class="field-value">info@ryouheid.enat.jp</div></div><div class="field"><div class="field-label">パスワード</div><div class="field-value"><div class="pw-wrap"><span class="pw-dots" data-pw="enakuri1">••••••••</span><button class="pw-toggle">表示</button></div></div></div></div></div></div>
   </div>
 
   <!-- 製造利用 -->
   <div id="production" class="dept-section">
     <div class="dept-header"><div class="dept-badge">製造利用</div></div>
-    <div class="category">
-      <div class="category-label line"><span class="icon">💬</span>LINE</div>
-      <div class="cards">
-        <div class="card"><div class="method-badge line">LINE</div><div class="vendor-name">フルハシ</div></div>
-        <div class="card"><div class="method-badge line">LINE</div><div class="vendor-name">亀屋商事</div></div>
-        <div class="card"><div class="method-badge line">LINE</div><div class="vendor-name">戸田屋</div></div>
-        <div class="card"><div class="method-badge line">LINE</div><div class="vendor-name">大津屋物産</div></div>
-        <div class="card"><div class="method-badge line">LINE</div><div class="vendor-name">福田商事</div></div>
-        <div class="card"><div class="method-badge line">LINE</div><div class="vendor-name">丹羽さん</div></div>
-      </div>
-    </div>
-    <div class="category">
-      <div class="category-label fax"><span class="icon">📠</span>ファックス</div>
-      <div class="cards">
-        <div class="card"><div class="method-badge fax">ファックス</div><div class="vendor-name">めいらく</div></div>
-      </div>
-    </div>
-    <div class="category">
-      <div class="category-label login"><span class="icon">🔐</span>ログイン発注</div>
-      <div class="cards">
-        <div class="card">
-          <div class="method-badge login">ログイン</div>
-          <div class="vendor-name">モノタロウ</div>
-          <div class="field"><div class="field-label">サイトURL</div><div class="field-value"><a href="https://www.monotaro.com/login/" target="_blank">https://www.monotaro.com/login/</a></div></div>
-          <div class="field"><div class="field-label">ログインID</div><div class="field-value">e3248935</div></div>
-          <div class="field"><div class="field-label">パスワード</div><div class="field-value"><div class="pw-wrap"><span class="pw-dots" data-pw="enakuri1">••••••••</span><button class="pw-toggle" onclick="togglePw(this)">表示</button></div></div></div>
-        </div>
-        <div class="card">
-          <div class="method-badge login">ログイン</div>
-          <div class="vendor-name">アスクル</div>
-          <div class="field"><div class="field-label">サイトURL</div><div class="field-value"><a href="https://solution.soloel.com/" target="_blank">https://solution.soloel.com/</a></div></div>
-          <div class="field"><div class="field-label">ログインID</div><div class="field-value">73165339</div></div>
-          <div class="field"><div class="field-label">パスワード</div><div class="field-value"><div class="pw-wrap"><span class="pw-dots" data-pw="ryouheido1">••••••••••</span><button class="pw-toggle" onclick="togglePw(this)">表示</button></div></div></div>
-        </div>
-      </div>
-    </div>
+    <div class="category"><div class="category-label line"><span class="icon">💬</span>LINE</div><div class="cards"><div class="card"><div class="method-badge line">LINE</div><div class="vendor-name">フルハシ</div></div><div class="card"><div class="method-badge line">LINE</div><div class="vendor-name">亀屋商事</div></div><div class="card"><div class="method-badge line">LINE</div><div class="vendor-name">戸田屋</div></div><div class="card"><div class="method-badge line">LINE</div><div class="vendor-name">大津屋物産</div></div><div class="card"><div class="method-badge line">LINE</div><div class="vendor-name">福田商事</div></div><div class="card"><div class="method-badge line">LINE</div><div class="vendor-name">丹羽さん</div></div></div></div>
+    <div class="category"><div class="category-label fax"><span class="icon">📠</span>ファックス</div><div class="cards"><div class="card"><div class="method-badge fax">ファックス</div><div class="vendor-name">めいらく</div></div></div></div>
+    <div class="category"><div class="category-label login"><span class="icon">🔐</span>ログイン発注</div><div class="cards"><div class="card"><div class="method-badge login">ログイン</div><div class="vendor-name">モノタロウ</div><div class="field"><div class="field-label">サイトURL</div><div class="field-value"><a href="https://www.monotaro.com/login/" target="_blank">https://www.monotaro.com/login/</a></div></div><div class="field"><div class="field-label">ログインID</div><div class="field-value">e3248935</div></div><div class="field"><div class="field-label">パスワード</div><div class="field-value"><div class="pw-wrap"><span class="pw-dots" data-pw="enakuri1">••••••••</span><button class="pw-toggle">表示</button></div></div></div></div><div class="card"><div class="method-badge login">ログイン</div><div class="vendor-name">アスクル</div><div class="field"><div class="field-label">サイトURL</div><div class="field-value"><a href="https://solution.soloel.com/" target="_blank">https://solution.soloel.com/</a></div></div><div class="field"><div class="field-label">ログインID</div><div class="field-value">73165339</div></div><div class="field"><div class="field-label">パスワード</div><div class="field-value"><div class="pw-wrap"><span class="pw-dots" data-pw="ryouheido1">••••••••••</span><button class="pw-toggle">表示</button></div></div></div></div></div></div>
   </div>
 
   <!-- 事務所利用 -->
   <div id="office" class="dept-section">
     <div class="dept-header"><div class="dept-badge">事務所利用</div></div>
-    <div class="category">
-      <div class="category-label line"><span class="icon">💬</span>LINE</div>
-      <div class="cards">
-        <div class="card"><div class="method-badge line">LINE</div><div class="vendor-name">ヒカリ紙工</div></div>
-        <div class="card"><div class="method-badge line">LINE</div><div class="vendor-name">ヤマニ（オーダー商品）</div></div>
-        <div class="card"><div class="method-badge line">LINE</div><div class="vendor-name">フルハシ（オーダー商品）</div></div>
-        <div class="card"><div class="method-badge line">LINE</div><div class="vendor-name">福田商事</div></div>
-        <div class="card"><div class="method-badge line">LINE</div><div class="vendor-name">大津屋</div></div>
-      </div>
-    </div>
-    <div class="category">
-      <div class="category-label login"><span class="icon">🔐</span>ログイン発注</div>
-      <div class="cards">
-        <div class="card">
-          <div class="method-badge login">ログイン</div>
-          <div class="vendor-name">大判マスター</div>
-          <div class="usage-tag">パネル・ポスター（土日祝 休）</div>
-          <div class="field"><div class="field-label">サイトURL</div><div class="field-value"><a href="https://ooban-master.com/" target="_blank">https://ooban-master.com/</a></div></div>
-          <div class="field"><div class="field-label">ログインID</div><div class="field-value"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="4a23242c250a3833253f222f232e642f242b3e64203a">[email&#160;protected]</a></div></div>
-          <div class="field"><div class="field-label">パスワード</div><div class="field-value"><div class="pw-wrap"><span class="pw-dots" data-pw="enakuri">•••••••</span><button class="pw-toggle" onclick="togglePw(this)">表示</button></div></div></div>
-        </div>
-        <div class="card">
-          <div class="method-badge login">ログイン</div>
-          <div class="vendor-name">タぺストーリー</div>
-          <div class="usage-tag">催事の巻き・垂れ幕（ターポリン印刷）</div>
-          <div class="field"><div class="field-label">サイトURL</div><div class="field-value"><a href="https://tapestory.main.jp/index.html" target="_blank">https://tapestory.main.jp/</a></div></div>
-          <div class="field"><div class="field-label">ログインID</div><div class="field-value"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="51383f373e1123283e24393438357f343f30257f3b21">[email&#160;protected]</a></div></div>
-          <div class="field"><div class="field-label">パスワード</div><div class="field-value"><div class="pw-wrap"><span class="pw-dots" data-pw="enakuri1">••••••••</span><button class="pw-toggle" onclick="togglePw(this)">表示</button></div></div></div>
-        </div>
-        <div class="card">
-          <div class="method-badge login">ログイン</div>
-          <div class="vendor-name">印刷通販デジタ</div>
-          <div class="usage-tag">良平堂Tシャツ・少量シール</div>
-          <div class="field"><div class="field-label">サイトURL</div><div class="field-value"><a href="https://www.digitaprint.jp/" target="_blank">https://www.digitaprint.jp/</a></div></div>
-          <div class="field"><div class="field-label">ログインID</div><div class="field-value"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="5e373038311e2c27312b363b373a703b303f2a70342e">[email&#160;protected]</a></div></div>
-          <div class="field"><div class="field-label">パスワード</div><div class="field-value"><div class="pw-wrap"><span class="pw-dots" data-pw="enakuri">•••••••</span><button class="pw-toggle" onclick="togglePw(this)">表示</button></div></div></div>
-        </div>
-        <div class="card">
-          <div class="method-badge login">ログイン</div>
-          <div class="vendor-name">グラフィックデザイン</div>
-          <div class="usage-tag">少数包装紙・箔押し・パネル・ポスター（ほぼ年中無休）</div>
-          <div class="field"><div class="field-label">サイトURL</div><div class="field-value"><a href="https://www.graphic.jp/" target="_blank">https://www.graphic.jp/</a></div></div>
-          <div class="field"><div class="field-label">ログインID</div><div class="field-value"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="4f262129200f3d36203a272a262b612a212e3b61253f">[email&#160;protected]</a></div></div>
-          <div class="field"><div class="field-label">パスワード</div><div class="field-value"><div class="pw-wrap"><span class="pw-dots" data-pw="enakuri1">••••••••</span><button class="pw-toggle" onclick="togglePw(this)">表示</button></div></div></div>
-        </div>
-        <div class="card">
-          <div class="method-badge login">ログイン</div>
-          <div class="vendor-name">イロドリ（紙印刷）</div>
-          <div class="field"><div class="field-label">サイトURL</div><div class="field-value"><a href="https://www.iro-dori.net/?is_previous=0" target="_blank">https://www.iro-dori.net/</a></div></div>
-          <div class="field"><div class="field-label">ログインID</div><div class="field-value"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="533a3d353c13212a3c263b363a377d363d32277d3923">[email&#160;protected]</a></div></div>
-          <div class="field"><div class="field-label">パスワード</div><div class="field-value"><div class="pw-wrap"><span class="pw-dots" data-pw="enakuri">•••••••</span><button class="pw-toggle" onclick="togglePw(this)">表示</button></div></div></div>
-        </div>
-      </div>
-    </div>
+    <div class="category"><div class="category-label line"><span class="icon">💬</span>LINE</div><div class="cards"><div class="card"><div class="method-badge line">LINE</div><div class="vendor-name">ヒカリ紙工</div></div><div class="card"><div class="method-badge line">LINE</div><div class="vendor-name">ヤマニ（オーダー商品）</div></div><div class="card"><div class="method-badge line">LINE</div><div class="vendor-name">フルハシ（オーダー商品）</div></div><div class="card"><div class="method-badge line">LINE</div><div class="vendor-name">福田商事</div></div><div class="card"><div class="method-badge line">LINE</div><div class="vendor-name">大津屋</div></div></div></div>
+    <div class="category"><div class="category-label login"><span class="icon">🔐</span>ログイン発注</div><div class="cards"><div class="card"><div class="method-badge login">ログイン</div><div class="vendor-name">大判マスター</div><div class="usage-tag">パネル・ポスター（土日祝 休）</div><div class="field"><div class="field-label">サイトURL</div><div class="field-value"><a href="https://ooban-master.com/" target="_blank">https://ooban-master.com/</a></div></div><div class="field"><div class="field-label">ログインID</div><div class="field-value">info@ryouheid.enat.jp</div></div><div class="field"><div class="field-label">パスワード</div><div class="field-value"><div class="pw-wrap"><span class="pw-dots" data-pw="enakuri">•••••••</span><button class="pw-toggle">表示</button></div></div></div></div><div class="card"><div class="method-badge login">ログイン</div><div class="vendor-name">タぺストーリー</div><div class="usage-tag">催事の巻き・垂れ幕（ターポリン印刷）</div><div class="field"><div class="field-label">サイトURL</div><div class="field-value"><a href="https://tapestory.main.jp/index.html" target="_blank">https://tapestory.main.jp/</a></div></div><div class="field"><div class="field-label">ログインID</div><div class="field-value">info@ryouheid.enat.jp</div></div><div class="field"><div class="field-label">パスワード</div><div class="field-value"><div class="pw-wrap"><span class="pw-dots" data-pw="enakuri1">••••••••</span><button class="pw-toggle">表示</button></div></div></div></div><div class="card"><div class="method-badge login">ログイン</div><div class="vendor-name">印刷通販デジタ</div><div class="usage-tag">良平堂Tシャツ・少量シール</div><div class="field"><div class="field-label">サイトURL</div><div class="field-value"><a href="https://www.digitaprint.jp/" target="_blank">https://www.digitaprint.jp/</a></div></div><div class="field"><div class="field-label">ログインID</div><div class="field-value">info@ryouheid.enat.jp</div></div><div class="field"><div class="field-label">パスワード</div><div class="field-value"><div class="pw-wrap"><span class="pw-dots" data-pw="enakuri">•••••••</span><button class="pw-toggle">表示</button></div></div></div></div><div class="card"><div class="method-badge login">ログイン</div><div class="vendor-name">グラフィックデザイン</div><div class="usage-tag">少数包装紙・箔押し・パネル・ポスター（ほぼ年中無休）</div><div class="field"><div class="field-label">サイトURL</div><div class="field-value"><a href="https://www.graphic.jp/" target="_blank">https://www.graphic.jp/</a></div></div><div class="field"><div class="field-label">ログインID</div><div class="field-value">info@ryouheid.enat.jp</div></div><div class="field"><div class="field-label">パスワード</div><div class="field-value"><div class="pw-wrap"><span class="pw-dots" data-pw="enakuri1">••••••••</span><button class="pw-toggle">表示</button></div></div></div></div><div class="card"><div class="method-badge login">ログイン</div><div class="vendor-name">イロドリ（紙印刷）</div><div class="field"><div class="field-label">サイトURL</div><div class="field-value"><a href="https://www.iro-dori.net/?is_previous=0" target="_blank">https://www.iro-dori.net/</a></div></div><div class="field"><div class="field-label">ログインID</div><div class="field-value">info@ryouheid.enat.jp</div></div><div class="field"><div class="field-label">パスワード</div><div class="field-value"><div class="pw-wrap"><span class="pw-dots" data-pw="enakuri">•••••••</span><button class="pw-toggle">表示</button></div></div></div></div></div></div>
   </div>
 
-  <div class="print-note">
-    印刷する場合はブラウザの印刷機能をご利用ください。
-  </div>
+  <div class="print-note">印刷する場合はブラウザの印刷機能をご利用ください。</div>
 </div>
 
-<scrip
+<noscript>JavaScriptを有効にしてください。</noscript>
+<script type="text/javascript">
+(function(){
+  var PW = 'ryouheido';
+
+  function showMain(){
+    document.getElementById('login-screen').style.display='none';
+    document.getElementById('main-content').style.display='block';
+  }
+
+  function checkPassword(){
+    var v = document.getElementById('pw-input').value;
+    if(v === PW){
+      sessionStorage.setItem('auth','1');
+      if(document.getElementById('remember-me').checked){
+        localStorage.setItem('auth','1');
+      }
+      showMain();
+    } else {
+      document.getElementById('login-error').style.display='block';
+      document.getElementById('pw-input').value='';
+      document.getElementById('pw-input').focus();
+    }
+  }
+
+  function logout(){
+    sessionStorage.removeItem('auth');
+    localStorage.removeItem('auth');
+    document.getElementById('main-content').style.display='none';
+    document.getElementById('login-screen').style.display='flex';
+    document.getElementById('pw-input').value='';
+  }
+
+  if(sessionStorage.getItem('auth')==='1' || localStorage.getItem('auth')==='1'){
+    showMain();
+  }
+
+  document.getElementById('login-btn').addEventListener('click', checkPassword);
+  document.getElementById('pw-input').addEventListener('keydown', function(e){ if(e.key==='Enter') checkPassword(); });
+  document.getElementById('logout-btn').addEventListener('click', logout);
+
+  document.querySelectorAll('.tab-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('.dept-section').forEach(function(el){ el.classList.remove('visible'); });
+      document.querySelectorAll('.tab-btn').forEach(function(el){ el.classList.remove('active'); });
+      document.getElementById(btn.dataset.target).classList.add('visible');
+      btn.classList.add('active');
+    });
+  });
+
+  document.querySelectorAll('.pw-toggle').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var span = btn.previousElementSibling;
+      if(btn.textContent==='表示'){
+        span.textContent = span.dataset.pw;
+        btn.textContent = '隠す';
+      } else {
+        span.textContent = '••••••••';
+        btn.textContent = '表示';
+      }
+    });
+  });
+})();
+</script>
+</body>
+</html>
